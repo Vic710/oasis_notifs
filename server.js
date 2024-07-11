@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors'); // Import the cors package
 require('dotenv').config();
 
 const app = express();
 const port = 3000;
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware to parse incoming JSON requests
 app.use(bodyParser.json());
@@ -22,7 +26,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // HTML template for email
-const generateEmailTemplate = (subject, content) => `
+const generateEmailTemplate = (content) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,23 +62,18 @@ const generateEmailTemplate = (subject, content) => `
             margin-top: 20px;
         }
         .button {
-            margin: 8px; /* Equivalent to 'm-2' */
-            padding: 8px 12px; /* Equivalent to 'p-2' and 'px-3' */
-            min-width: 75px; /* Equivalent to 'min-w-[75px]' */
-            background-color: #4299e1; /* Equivalent to 'bg-blue-500' */
-            color: #fff !important; /* Force white text color */
-            border-radius: 5px; /* Equivalent to 'rounded-[5px]' */
+            background-color: #6ea5e1; /* Lighter blue */
+            color: #fff; /* White text color */
+            padding: 12px 24px; /* Increased padding */
             text-decoration: none;
+            border-radius: 5px;
             display: inline-block;
             font-weight: 700; /* Even bolder font weight */
-            text-align: center;
-            transition: background-color 0.3s ease;
         }
 
         .button:hover {
-            background-color: #2b6cb0; /* Darker blue on hover */
+            background-color: #004185; /* Darker blue on hover */
         }
-
         .footer {
             text-align: center;
             font-size: 12px;
@@ -140,7 +139,7 @@ app.post('/notify', async (req, res) => {
     }
 
     // Generate HTML email content
-    const html = generateEmailTemplate(subject, htmlContent);
+    const html = generateEmailTemplate(htmlContent);
 
     // Define mail options
     const mailOptions = {
